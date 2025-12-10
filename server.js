@@ -1,7 +1,7 @@
 // server.js (Ваш головний файл бекенду для App Platform)
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser'; // Якщо використовуєте
 
 const app = express();
 const PORT = process.env.PORT || 8080; // App Platform надасть порт через змінну ENV
