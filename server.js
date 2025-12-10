@@ -67,6 +67,10 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 
+app.get('/health', (req, res) => {
+    return res.status(200).json({message: 'ok!'});
+})
+
 // --- Ендпойнт Проксі для Оновлення Токена ---
 app.post('/api/hubspot/refresh-token', async (req, res) => {
     // 1. Отримуємо refresh_token від фронтенду (у тілі запиту)
