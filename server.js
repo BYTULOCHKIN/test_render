@@ -58,7 +58,7 @@ export async function refreshAccessToken(currentRefreshToken) {
             throw new Error(`Token Refresh failed: [${status}] ${message}`);
         }
         
-        throw new Error('Failed to refresh HubSpot access token due to network error.');
+        throw new Error('Failed to refresh HubSpot access token due to network error.' + error);
     }
 }
 
