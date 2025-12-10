@@ -34,6 +34,7 @@ export async function refreshAccessToken(currentRefreshToken) {
         // redirect_uri НЕ потрібен для grant_type=refresh_token
     })
 
+    
     try {
         const response = await axios.post(
             HUBSPOT_TOKEN_ENDPOINT, 
