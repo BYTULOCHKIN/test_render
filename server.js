@@ -28,8 +28,8 @@ export async function refreshAccessToken(currentRefreshToken) {
     // Параметри для запиту
     const body = {
         'grant_type': 'refresh_token',
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET,
+        'client_id': "38d93d7d-c66c-41fa-8f9d-2848d3b357ce",
+        'client_secret': "7c3db07d-512b-4204-982d-232370c14d25",
         'refresh_token': currentRefreshToken,
         // redirect_uri НЕ потрібен для grant_type=refresh_token
     }
