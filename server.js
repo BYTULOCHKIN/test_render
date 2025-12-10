@@ -66,7 +66,6 @@ app.use(cors({
     // Це дозволить будь-який запит з http://localhost:3000
     origin: '*', 
     methods: ['POST', 'GET'], // Вказуємо дозволені методи
-    credentials: true // Якщо ви використовуєте cookies або заголовки авторизації
 }));
 app.use(bodyParser.json());
 
