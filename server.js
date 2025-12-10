@@ -2,7 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser'; // Якщо використовуєте
-import axios from "axios";
+import { axios } from "axios";
 
 const app = express();
 const PORT = process.env.PORT || 8080; // App Platform надасть порт через змінну ENV
