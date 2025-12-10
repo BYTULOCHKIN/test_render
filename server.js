@@ -25,23 +25,18 @@ export async function refreshAccessToken(currentRefreshToken) {
     }
     
     // Параметри для запиту
-    const body = new URLSearchParams({
+    const body = {
         'grant_type': 'refresh_token',
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET,
         'refresh_token': currentRefreshToken,
         // redirect_uri НЕ потрібен для grant_type=refresh_token
-    }).toString();
+    }
 
     try {
         const response = await axios.post(
             HUBSPOT_TOKEN_ENDPOINT, 
             body, 
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-            }
         );
 
         return response.data;
