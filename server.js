@@ -62,8 +62,12 @@ export async function refreshAccessToken(currentRefreshToken) {
     }
 }
 
-// Дозволяємо CORS для вашого фронтенд-домену (або *)
-app.use(cors({ origin: 'https://www.hastinasbathcollection.com' })); 
+app.use(cors({ 
+    // Це дозволить будь-який запит з http://localhost:3000
+    origin: '*', 
+    methods: ['POST', 'GET'], // Вказуємо дозволені методи
+    credentials: true // Якщо ви використовуєте cookies або заголовки авторизації
+}));
 app.use(bodyParser.json());
 
 // --- Ендпойнт Проксі для Оновлення Токена ---
