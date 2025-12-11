@@ -11,8 +11,9 @@ const PORT = process.env.PORT || 8080; // App Platform надасть порт �
 // Отримуємо значення зі змінних середовища (на DigitalOcean)
 const CLIENT_ID = process.env.HUBSPOT_CLIENT_ID; 
 const CLIENT_SECRET = process.env.HUBSPOT_CLIENT_SECRET;
-const HUBSPOT_TOKEN_ENDPOINT = 'https://api.hubapi.com/oauth/v1/token';
-const HUBSPOT_CONTACTS_ENDPOINT = 'https://api.hubapi.com/crm/v3/objects/contacts';
+const HUBSPOT_BASE_URL = process.env.HUBSPOT_BASE_URL;
+const HUBSPOT_TOKEN_ENDPOINT = HUBSPOT_BASE_URL + '/oauth/v1/token';
+const HUBSPOT_CONTACTS_ENDPOINT = HUBSPOT_BASE_URL + '/crm/v3/objects/contacts';
 
 /**
  * Використовує refresh_token для отримання нової пари access_token/refresh_token.
