@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 8080; // App Platform надасть порт �
 const CLIENT_ID = process.env.HUBSPOT_CLIENT_ID; 
 const CLIENT_SECRET = process.env.HUBSPOT_CLIENT_SECRET;
 const HUBSPOT_TOKEN_ENDPOINT = 'https://api.hubapi.com/oauth/v1/token';
+const HUBSPOT_CONTACTS_ENDPOINT = 'https://api.hubapi.com/crm/v3/objects/contacts';
 
 /**
  * Використовує refresh_token для отримання нової пари access_token/refresh_token.
@@ -60,6 +61,44 @@ export async function refreshAccessToken(currentRefreshToken) {
     }
 }
 
+/**
+ * Створює новий контакт безпосередньо в HubSpot (через проксі).
+ * @param fields - Дані контакту (email, firstname, etc.).
+ * @param TOKEN - Access Token.
+ */
+async function createHubspotContact(fields, TOKEN) {
+    // Формування тіла запиту, як вимагає HubSpot
+    const payload = {
+        properties: fields,
+    };
+
+    if (!TOKEN) {
+        throw new Error('HubSpot Access Token is missing from the request.');
+    }
+
+    try {
+        const response = await axios.post(HUBSPOT_CONTACTS_ENDPOINT, payload, {
+            headers: {
+                // Використання токена
+                Authorization: `Bearer ${TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        const axiosError = error;
+
+        if (axiosError.response) {
+            const status = axiosError.response.status;
+            const message = axiosError.response.data?.message || 'Unknown error';
+            console.error(`HubSpot Contact Creation failed (Status ${status}): ${message}`);
+            throw new Error(`Contact creation failed: [${status}] ${message}`);
+        }
+        throw new Error('Failed to create HubSpot contact due to network error: ' + error.message);
+    }
+}
+
 app.use(cors({ 
     // Це дозволить будь-який запит з http://localhost:3000
     origin: '*', 
@@ -92,6 +131,28 @@ app.post('/api/hubspot/refresh-token', async (req, res) => {
         // Обробка помилок (наприклад, недійсний refresh token)
         console.error('API Error:', error.message);
         res.status(500).send({ message: error.message || 'Internal server error during token refresh.' });
+    }
+});
+
+// --- 2. НОВИЙ Ендпойнт для СТВОРЕННЯ КОНТАКТА ---
+app.post('/api/hubspot/create-contact', async (req, res) => {
+    // Очікуємо access_token та поля контакту від фронтенду
+    const { fields, accessToken } = req.body; 
+
+    if (!fields || !accessToken) {
+        return res.status(400).send({ message: 'Missing contact fields or access token.' });
+    }
+
+    try {
+        // Викликаємо функцію, яка робить запит до HubSpot
+        const newContact = await createHubspotContact(fields, accessToken);
+
+        // Повертаємо новий контакт клієнту
+        res.status(201).json(newContact);
+        
+    } catch (error) {
+        console.error('API Error:', error.message);
+        res.status(500).send({ message: error.message || 'Internal server error during contact creation.' });
     }
 });
 
